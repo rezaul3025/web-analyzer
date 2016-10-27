@@ -18,29 +18,20 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 
 	private Connection connection;
 
-	private String url;
-	
-	private Integer statusCode;
-
 	@Override
 	public AnalyzerService analyze(String url) {
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-
 		// TODO Auto-generated method stub
-		// connection = Jsoup.connect(url).userAgent(USER_AGENT);
-
+		connection = Jsoup.connect(url);
 		try {
-			HttpGet httpGet = new HttpGet("http://targethost/homepage");
-			CloseableHttpResponse response1 = httpclient.execute(httpGet);
-			statusCode = response1.getStatusLine().getStatusCode();
-			
-			if (statusCode == 200) {
-				Document htmlDocument = connection.get();
+			Document htmlDocument = connection.get();
+			if (connection.response().statusCode() == 200) {
+				
 				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + htmlDocument.body().text());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println(e.getLocalizedMessage());
 		}
 		
 
@@ -50,7 +41,7 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 	@Override
 	public Integer getRequestStatus() {
 		// TODO Auto-generated method stub
-		return statusCode;
+		return connection.response().statusCode();
 	}
 
 }

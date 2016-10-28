@@ -26,34 +26,32 @@ public class AnalyzerServiceHandler implements AnalyzerService {
     private Utils utils;
 
     @Override
-    public AnalyzerService analyze(String url) {
-        // TODO Auto-generated method stub
-        connection = Jsoup.connect(url);
+    public void analyze(String url) {
         try {
-            Document htmlDocument = connection.get();
-            if (connection.response().statusCode() == 200) {
-
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + htmlDocument.body().text());
-
-                List<Node> nodes = htmlDocument.childNodes();
-                String version = utils.getDocVersion(nodes);
-                System.out.println(version);
-                analysisResult.setVersion(version);
-             
-            }
+        	if(url != null && !url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))){
+	        	connection = Jsoup.connect(url);
+	            Document htmlDocument = connection.get();
+	            int statusCode = connection.response().statusCode();
+	            analysisResult.setRequestStatusCode(statusCode);
+	            analysisResult.setRequestStatusMessage(connection.response().statusMessage());
+	            if (statusCode == 200) {
+	
+	                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + htmlDocument.body().text());
+	
+	                List<Node> nodes = htmlDocument.childNodes();
+	                String version = utils.getDocVersion(nodes);
+	                System.out.println(version);
+	                analysisResult.setVersion(version);
+	            }
+        	}
+            
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            analysisResult.setRequestStatusCode(500);
+            analysisResult.setRequestStatusMessage(e.getLocalizedMessage());
             System.out.println(e.getLocalizedMessage());
         }
-
-        return this;
-    }
-
-    @Override
-    public Integer getRequestStatus() {
-        // TODO Auto-generated method stub
-        return connection.response().statusCode();
     }
 
     @Override

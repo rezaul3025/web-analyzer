@@ -5,6 +5,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-<p th:text="'Document version ' + ${analysisresult.version}" />
+<p th:text="'Request URL : ' + ${forminput.url}" />
+<p th:text="'Status code : ' + ${analysisresult.requestStatusCode}" />
+<p th:text="'Status message : ' + ${analysisresult.requestStatusMessage}" />
+<hr/>
+<p th:text="'Document version : ' + ${analysisresult.version}" />
 </body>
 </html>

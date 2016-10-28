@@ -36,10 +36,10 @@ public class Utils {
             if (node instanceof DocumentType) {
                 DocumentType documentType = (DocumentType) node;
                 System.out.println(documentType.toString());
-                String docTypePublicId = documentType.attr("publicid");
-                if (docTypePublicId != null && docTypePublicId.isEmpty()) {
+                String docTypePublicId = documentType.toString();//documentType.attr("publicid");
+                if (docTypePublicId != null && !docTypePublicId.isEmpty()) {
                     docTypePublicId = docTypePublicId.toLowerCase();
-                    if (docTypePublicId.contains(HTML5_IDENTIFIER)) {
+                    if (docTypePublicId.equals(HTML5_IDENTIFIER)) {
                         version = "HTML 5";
                     } else if (docTypePublicId.contains(HTML4_VERSION) && docTypePublicId.contains(HTML_IDENTIFIER_STRICT)) {
                         version = "HTML 4.01 Strict";
@@ -59,7 +59,6 @@ public class Utils {
                         version = "XHTML 1.1";
                     }
                 }
-                System.out.println(docTypePublicId);
                 return version;
             }
         }

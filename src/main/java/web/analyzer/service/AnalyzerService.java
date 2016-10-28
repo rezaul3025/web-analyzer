@@ -1,6 +1,9 @@
 package web.analyzer.service;
 
+import web.analyzer.domain.AnalysisResult;
+
 public interface AnalyzerService {
-	public AnalyzerService analyze(String url);
-	public Integer getRequestStatus();
+	AnalyzerService analyze(String url);
+	Integer getRequestStatus();
+        AnalysisResult getAanlysisResult();
 }

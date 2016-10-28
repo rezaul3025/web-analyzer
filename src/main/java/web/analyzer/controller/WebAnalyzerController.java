@@ -23,9 +23,10 @@ public class WebAnalyzerController {
 	}
 	
 	@PostMapping(value="/init-analyzer")
-	public String initWebAnalyzer(@ModelAttribute("forminput") FormInput formInput){
+	public String initWebAnalyzer(@ModelAttribute("forminput") FormInput formInput, Model model){
 		int scode = analyzerService.analyze(formInput.getUrl()).getRequestStatus();
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : "+scode);
+                model.addAttribute("analysisresult", analyzerService.getAanlysisResult());
 		return "analysis_result";
 	}
 }

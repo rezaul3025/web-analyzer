@@ -1,14 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"/>
-<title>Insert title here</title>
+	<meta charset="UTF-8" />
+	<title>Insert title here</title>
+	<style type="text/css">
+		table {
+		    border-collapse: collapse;
+		    border-spacing: 0;
+		}
+		table>thead>tr>th {
+			border-bottom: 2px solid #ddd;
+			vertical-align: bottom;
+		}
+		
+		table>tbody>tr>td, 
+		table>tbody>tr>th, 
+		table>tfoot>tr>td, 
+		table>tfoot>tr>th,
+		table>thead>tr>td, 
+		table>thead>tr>th {
+			border-top: 1px solid #ddd;
+			line-height: 1.42857;
+			padding: 8px;
+			vertical-align: top;
+		}
+	</style>
 </head>
 <body>
-<p th:text="'Request URL : ' + ${forminput.url}" />
-<p th:text="'Status code : ' + ${analysisresult.requestStatusCode}" />
-<p th:text="'Status message : ' + ${analysisresult.requestStatusMessage}" />
-<hr/>
-<p th:text="'Document version : ' + ${analysisresult.version}" />
+	<h2>Web Analyzer</h2>
+	<hr/>
+	<p th:text="'Request URL : ' + ${forminput.url}" />
+	<p th:text="'Status code : ' + ${analysisresult.requestStatusCode}" />
+	<p
+		th:text="'Status message : ' + ${analysisresult.requestStatusMessage}" />
+	<hr />
+	<p>
+		<b>Version : </b><span th:text="${analysisresult.version}"></span>
+	</p>
+	<p>
+		<b>Title : </b> <span th:text="${analysisresult.title}"></span>
+	</p>
+	<p>
+		<b>Heading(s) &amp; Level: </b>
+		total heading(s) : <span
+				th:text="${analysisresult.headings.size()}"></span>
+	</p>
+	<table>
+		<tr>
+			<th>Tag</th>
+			<th>Tag Content</th>
+			<th>Level</th>
+		</tr>
+		<tr>
+			<td colspan="3">Total heading(s) : <span
+				th:text="${analysisresult.headings.size()}"></span>
+			</td>
+		</tr>
+		<tr th:each="heading : ${analysisresult.headings}">
+			<td th:text="${heading.tagName}"></td>
+			<td th:utext="${heading.tagContent}"></td>
+			<td th:text="${heading.level}"></td>
+		</tr>
+	</table>
 </body>
 </html>

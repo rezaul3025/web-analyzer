@@ -5,10 +5,18 @@
  */
 package web.analyzer.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+
+import web.analyzer.domain.AnalysisResult;
+import web.analyzer.domain.Heading;
 
 /**
  *
@@ -29,6 +37,9 @@ public class Utils {
     private static final String XHTML1_VERSION = "1.0";
     private static final String XHTML11_VERSION = "1.1";
    // private static final String XHTM2_VERSION = "2.0";
+    private static final String XHTML = "xhtml";
+    
+    private static final String HEADING_TAG = "h1,h2,h3,h4,h5,h6";
 
     public String getDocVersion(List<Node> nodes) {
         String version = "non";
@@ -64,5 +75,54 @@ public class Utils {
         }
         return version;
     }
-    private static final String XHTML = "xhtml";
+    
+    public List<Heading> docHeadingsProcess(Document doc){
+    	
+    	List<Heading> headingList = new ArrayList<Heading>();
+    	int level =0;
+    	Elements eles = doc.select("*");
+    	for(Element ele : eles){
+    		level++;
+    		//System.out.println(ele.text());
+    		//System.out.println(level);
+    		if(HEADING_TAG.contains(ele.tagName())){
+    			headingList.add(new Heading(ele.tagName(),ele.html(),level));
+    		}
+    		
+    		if(ele.children().size() == 0){
+    			level=0;
+    			continue;
+    		}
+    		else{
+    			eles = ele.children();
+    		}
+    	}
+    	
+    	return headingList;
+    }
+    
+    public void getLinks(Document doc){
+    	Elements links = doc.select("a[href]");
+    	for (Element link : links) {
+           // print(" * %s <%s> (%s)", link.tagName(),link.attr("abs:href"), link.attr("rel"));
+            String href = link.attr("abs:href");
+            String rel = link.attr("rel");
+            
+            System.out.println(href+" -> "+rel);
+        }
+    }
+    
+    public void updateAnalysisResultSatus(Integer code, String message, AnalysisResult result, boolean isError){
+    	
+    	result.setRequestStatusCode(code);
+    	result.setRequestStatusMessage(message);
+    	
+    	if(isError){
+    		result.setHeadings(new ArrayList<Heading>());
+    		result.setTitle("");
+    		result.setVersion("");
+    	}
+    	
+    	//return result;
+    }
 }

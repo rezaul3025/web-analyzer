@@ -5,6 +5,9 @@
  */
 package web.analyzer.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AnalysisResult {
     private String version;
+    private String title;
+    private List<Heading> headings = new ArrayList<Heading>();
     private Integer requestStatusCode;
     private String requestStatusMessage;
 
@@ -24,6 +29,22 @@ public class AnalysisResult {
     public void setVersion(String version) {
         this.version = version;
     }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public List<Heading> getHeadings() {
+		return headings;
+	}
+
+	public void setHeadings(List<Heading> headings) {
+		this.headings = headings;
+	}
 
 	public Integer getRequestStatusCode() {
 		return requestStatusCode;

@@ -196,6 +196,7 @@ public class Utils {
 			result.setLinks(new ArrayList<Link>());
 			result.setTitle("");
 			result.setVersion("");
+			result.setHasLoginForm("");
 		}
 
 	}

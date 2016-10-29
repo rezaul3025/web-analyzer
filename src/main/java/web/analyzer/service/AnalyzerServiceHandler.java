@@ -1,6 +1,8 @@
 package web.analyzer.service;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.jsoup.Connection;
@@ -17,8 +19,8 @@ import web.analyzer.utils.Utils;
 
 @Service
 public class AnalyzerServiceHandler implements AnalyzerService {
-	
-	private static final String USER_AGENT="Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2";
+
+	private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2";
 
 	private Connection connection;
 
@@ -33,14 +35,14 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 		if (url != null && !url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {
 			connection = Jsoup.connect(url.trim());
 			try {
-				
-				Document htmlDocument = connection.timeout(10*1000).userAgent(USER_AGENT).get();
+
+				Document htmlDocument = connection.timeout(10 * 1000).userAgent(USER_AGENT).get();
 				int statusCode = connection.response().statusCode();
 				String statusMessage = connection.response().statusMessage();
-				//analysisResult.setRequestStatusCode(statusCode);
-				//analysisResult.setRequestStatusMessage(statusMessage);
-				utils.updateAnalysisResultSatus(statusCode,	statusMessage, analysisResult, false);
-				
+				// analysisResult.setRequestStatusCode(statusCode);
+				// analysisResult.setRequestStatusMessage(statusMessage);
+				utils.updateAnalysisResultSatus(statusCode, statusMessage, analysisResult, false);
+
 				if (statusCode == 200) {
 
 					// System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ :
@@ -63,25 +65,31 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 					String hostName = connection.request().url().getHost();
 					List<Link> links = utils.getLinks(htmlDocument, hostName);
 					analysisResult.setLinks(links);
-					
-					//process form
-					analysisResult.setHasLoginForm(utils.hasLoginForm(htmlDocument)?"YES":"NO");
+
+					// process form
+					analysisResult.setHasLoginForm(utils.hasLoginForm(htmlDocument) ? "YES" : "NO");
 
 				}
-			
-			}catch(HttpStatusException he){
-				//analysisResult.setRequestStatusCode(he.getStatusCode());
-				//analysisResult.setRequestStatusMessage(he.getMessage());
-				utils.updateAnalysisResultSatus(he.getStatusCode(),he.getMessage(), analysisResult, true);
 
-			} catch (IOException e) {
+			} catch (HttpStatusException he) {
+				// analysisResult.setRequestStatusCode(he.getStatusCode());
+				// analysisResult.setRequestStatusMessage(he.getMessage());
+				utils.updateAnalysisResultSatus(he.getStatusCode(), he.getMessage(), analysisResult, true);
+
+			} 
+			catch (IOException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				//analysisResult.setRequestStatusCode(500);
-				//analysisResult.setRequestStatusMessage(e.getLocalizedMessage());
-				//System.out.println(e.getMessage()+","+e);
-				utils.updateAnalysisResultSatus(500, e.getLocalizedMessage(), analysisResult, true);
+				// e.printStackTrace();
+				// analysisResult.setRequestStatusCode(500);
+				// analysisResult.setRequestStatusMessage(e.getLocalizedMessage());
+				// System.out.println(e.getMessage()+","+e);
+				utils.updateAnalysisResultSatus(500, e.toString(), analysisResult, true);
 			}
+		} else {
+
+			utils.updateAnalysisResultSatus(500, "Invalid url", analysisResult, true);
+			throw new IllegalArgumentException();
+
 		}
 	}
 

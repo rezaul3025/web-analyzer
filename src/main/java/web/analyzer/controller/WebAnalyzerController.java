@@ -27,9 +27,9 @@ public class WebAnalyzerController {
 	public String initWebAnalyzer(@ModelAttribute("forminput") FormInput formInput, Model model) {
 		String url = formInput.getUrl();
 		analyzerService.analyze(url);
-		AnalysisResult aanlysisResult = analyzerService.getAanlysisResult();
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + aanlysisResult.getRequestStatusCode());
-		model.addAttribute("analysisresult", aanlysisResult);
+		AnalysisResult analysisResult = analyzerService.getAanlysisResult();
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + analysisResult.getRequestStatusCode());
+		model.addAttribute("analysisresult", analysisResult);
 		return "analysis_result";
 	}
 }

@@ -70,9 +70,9 @@
 	</p>
 	<table>
 		<tr>
-			<th>Tag</th>
+			<th style="text-align:left">Tag</th>
 			<th style="text-align:left">Tag Content</th>
-			<th>Level</th>
+			<th style="text-align:left">Level</th>
 		</tr>
 		<tr th:each="heading : ${analysisresult.headings}">
 			<td th:text="${heading.tagName}"></td>
@@ -87,8 +87,8 @@
 	<table>
 		<tr>
 			<th style="text-align:left">Link</th>
-			<th>Type</th>
-			<th>Is Accessible ?</th>
+			<th style="text-align:left">Type</th>
+			<th style="text-align:left">Is Accessible ?</th>
 		</tr>
 		<tr th:each="link : ${analysisresult.links}">
 			<td style="width:85%" th:text="${link.href}"></td>

@@ -17,10 +17,13 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.FormElement;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
@@ -148,24 +151,36 @@ public class Utils {
 	}
 
 	public boolean hasLoginForm(Document doc) {
-		Elements formElements = doc.select("*");//doc.getElementsByTag("form");
+		Elements formElements = doc.getElementsByTag("form");
+		//FormElement form = ((FormElement) doc.select("form"));
 		for (Element formElement : formElements) {
 			
-			if (formElement.tagName().equals("input") && formElement.hasAttr("type") && formElement.attr("type").equals("password")) {
-				System.out.println("login form found");
+			String frmElementAsString = formElement.toString().toLowerCase().replace("'", "\"");
+			Pattern inputTextTagPattern = Pattern.compile("type=\"text\"");
+			Matcher inputTextTagMatcher = inputTextTagPattern.matcher(frmElementAsString);
+			int inputTextTagCount = 0;
+			while (inputTextTagMatcher.find()) {
+				inputTextTagCount++;
+			}
+			
+			Pattern inputEmailTagPattern = Pattern.compile("type=\"email\"");
+			Matcher inputEmailTagMatcher = inputEmailTagPattern.matcher(frmElementAsString);
+			int inputEmailTagCount = 0;
+			while (inputEmailTagMatcher.find()) {
+				inputEmailTagCount++;
+			}
+			
+			Pattern inputPasswordTagPattern = Pattern.compile("type=\"password\"");
+			Matcher inputPasswordTagMatcher = inputPasswordTagPattern.matcher(frmElementAsString);
+			int inputPasswordTagCount = 0;
+			while (inputPasswordTagMatcher.find()) {
+				inputPasswordTagCount++;
+			}
+			
+			if((inputTextTagCount == 1 || inputEmailTagCount == 1) && inputPasswordTagCount ==1){
 				return true;
 			}
-			//formElement.tagName().equals("input")  && formElement.hasAttr("type") && formElement.attr("type").equals("password")
-			
-			
-			Elements formChild = formElement.children();
-			
-			if(formChild.size()==0){
-				continue;
-			}
-			else{
-				formElements = formChild;
-			}
+	
 		}
 		
 		return false;

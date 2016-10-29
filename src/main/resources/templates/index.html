@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Insert title here</title>
+<title>Web Analyzer</title>
 <style type="text/css">
 		div{
 			max-width: none !important;
@@ -21,7 +21,7 @@
 		<form action="#" th:action="@{/init-analyzer}" th:object="${forminput}" method="post">
 			<p>
 				Please, type website url to be analyzed 
-				<input type="text" th:field="*{url}" size="40" width="30" placeholder="e.g. http//:weexample.com" />
+				<input type="text" th:field="*{url}" size="40" width="30" placeholder="e.g. http//:webexample.com" />
 			</p>
 			<p>
 				<input type="submit" name="analyzewebsite" value="Analyze" />

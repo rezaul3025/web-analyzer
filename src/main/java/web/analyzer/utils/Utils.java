@@ -5,6 +5,16 @@
  */
 package web.analyzer.utils;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,14 +111,25 @@ public class Utils {
     	return headingList;
     }
     
-    public void getLinks(Document doc){
+    public void getLinks(Document doc, String hostName) throws IOException{
     	Elements links = doc.select("a[href]");
     	for (Element link : links) {
            // print(" * %s <%s> (%s)", link.tagName(),link.attr("abs:href"), link.attr("rel"));
             String href = link.attr("abs:href");
-            String rel = link.attr("rel");
+            //String rel = link.attr("rel");
             
-            System.out.println(href+" -> "+rel);
+           /* URL u = new URL ( "http://www.example.com/");
+            HttpURLConnection huc =  ( HttpURLConnection )  u.openConnection (); 
+            huc.setRequestMethod ("GET");  //OR  huc.setRequestMethod ("HEAD"); 
+            huc.connect () ; 
+            int code = huc.getResponseCode() ;
+            System.out.println(code);*/
+            
+            if(href.startsWith("http://") || href.startsWith("https://")){
+            	System.out.println(pingHost(href));
+    		}
+            
+            System.out.println(href);
         }
     }
     
@@ -123,6 +144,52 @@ public class Utils {
     		result.setVersion("");
     	}
     	
-    	//return result;
     }
+    
+    private static boolean pingHost(String href) {
+    	/*try {
+			boolean reachable = InetAddress.getByName(host).isReachable(3000);
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+        /*try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(host, port), timeout);
+            return true;
+        } catch (IOException e) {
+            return false; // Either timeout or unreachable or failed DNS lookup.
+        }*/
+        
+    	/*try {
+    	    InetAddress.getByName(href).isReachable(2000); //Replace with your name
+    	    return true;
+    	} catch (Exception e)
+    	{
+    	    return false;
+    	}*/
+    	
+    	try {
+            URL url = new URL(href);
+            URLConnection urlConnection = url.openConnection();
+
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
+            httpURLConnection.setRequestMethod("HEAD");
+            httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+
+
+            return (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) ;
+                
+        } 
+        catch(UnknownHostException unknownHostException){
+            return false;
+        }
+        catch (Exception e) {
+           return false;
+        }
+    }
+
 }

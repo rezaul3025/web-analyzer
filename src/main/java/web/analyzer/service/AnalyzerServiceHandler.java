@@ -17,8 +17,6 @@ import web.analyzer.utils.Utils;
 @Service
 public class AnalyzerServiceHandler implements AnalyzerService {
 
-	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-
 	private Connection connection;
 
 	@Autowired
@@ -30,16 +28,15 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 	@Override
 	public void analyze(String url) {
 		if (url != null && !url.isEmpty() && (url.startsWith("http://") || url.startsWith("https://"))) {
-
 			connection = Jsoup.connect(url.trim());
-
 			try {
-				Document htmlDocument = connection.get();
+				
+				Document htmlDocument = connection.timeout(10*1000).get();
 				int statusCode = connection.response().statusCode();
 				String statusMessage = connection.response().statusMessage();
 				//analysisResult.setRequestStatusCode(statusCode);
 				//analysisResult.setRequestStatusMessage(statusMessage);
-				utils.updateAnalysisResultSatus(statusCode,statusMessage, analysisResult, false);
+				utils.updateAnalysisResultSatus(statusCode,	statusMessage, analysisResult, false);
 				
 				if (statusCode == 200) {
 
@@ -60,7 +57,9 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 					// System.out.println(headingList);
 
 					// Process links
-					utils.getLinks(htmlDocument);
+					String hostName = connection.request().url().getHost();
+					utils.getLinks(htmlDocument, hostName);
+					
 
 				}
 			

@@ -63,6 +63,9 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 					String hostName = connection.request().url().getHost();
 					List<Link> links = utils.getLinks(htmlDocument, hostName);
 					analysisResult.setLinks(links);
+					
+					//process form
+					analysisResult.setHasLoginForm(utils.hasLoginForm(htmlDocument)?"YES":"NO");
 
 				}
 			

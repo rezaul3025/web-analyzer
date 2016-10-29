@@ -60,9 +60,13 @@
 		<b>Total link(s) : </b><span
 				th:text="${analysisresult.links.size()}"></span>
 	</p>
+	<p>
+		<b>Has LoginForm :</b>
+		<span th:text="${analysisresult.hasLoginForm}"></span>
+	</p>
 	<p>All headings &amp; links are displayed below</p>
 	<p>
-		<b>Heading(s) &amp; Level: </b>
+		<b>Heading(s) &amp; Level: </b> (level start from 0)
 	</p>
 	<table>
 		<tr>

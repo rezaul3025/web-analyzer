@@ -20,6 +20,7 @@ public class AnalysisResult {
     private String title;
     private List<Heading> headings = new ArrayList<Heading>();
     private List<Link> links = new ArrayList<Link>();
+    private String hasLoginForm;
     private Integer requestStatusCode;
     private String requestStatusMessage;
 
@@ -53,6 +54,14 @@ public class AnalysisResult {
 
 	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+
+	public String getHasLoginForm() {
+		return hasLoginForm;
+	}
+
+	public void setHasLoginForm(String hasLoginForm) {
+		this.hasLoginForm = hasLoginForm;
 	}
 
 	public Integer getRequestStatusCode() {

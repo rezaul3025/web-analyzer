@@ -6,7 +6,7 @@ public class Link {
 	
 	private String type;
 	
-	private boolean isAccessible;
+	private boolean accessible;
 	
 	public Link(){
 		
@@ -15,7 +15,7 @@ public class Link {
 	public Link(String href, String type, boolean isAccessible){
 		this.href = href;
 		this.type = type;
-		this.isAccessible = isAccessible;
+		this.accessible = accessible;
 	}
 
 	public String getHref() {
@@ -34,11 +34,11 @@ public class Link {
 		this.type = type;
 	}
 
-	public boolean isAccessible() {
-		return isAccessible;
+	public boolean getAccessible() {
+		return accessible;
 	}
 
-	public void setAccessible(boolean isAccessible) {
-		this.isAccessible = isAccessible;
+	public void setAccessible(boolean accessible) {
+		this.accessible = accessible;
 	}
 }

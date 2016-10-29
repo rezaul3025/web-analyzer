@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import web.analyzer.domain.AnalysisResult;
 import web.analyzer.domain.Heading;
+import web.analyzer.domain.Link;
 
 /**
  *
@@ -111,7 +112,8 @@ public class Utils {
     	return headingList;
     }
     
-    public void getLinks(Document doc, String hostName) throws IOException{
+    public List<Link> getLinks(Document doc, String hostName) throws IOException{
+    	List<Link> linksInfo = new ArrayList<Link>();
     	Elements links = doc.select("a[href]");
     	for (Element link : links) {
            // print(" * %s <%s> (%s)", link.tagName(),link.attr("abs:href"), link.attr("rel"));
@@ -126,11 +128,16 @@ public class Utils {
             System.out.println(code);*/
             
             if(href.startsWith("http://") || href.startsWith("https://")){
-            	System.out.println(pingHost(href));
+            	//System.out.println(pingHost(href));
+            	URL url = new URL(href);
+            	String linkHostName = url.getHost();
+            	String linkType = linkHostName.equalsIgnoreCase(hostName)?"internal":"external";
+            	System.out.println(linkType);
+            	linksInfo.add(new Link(href,linkType, true));
     		}
-            
-            System.out.println(href);
         }
+    	
+    	return linksInfo;
     }
     
     public void updateAnalysisResultSatus(Integer code, String message, AnalysisResult result, boolean isError){
@@ -140,6 +147,7 @@ public class Utils {
     	
     	if(isError){
     		result.setHeadings(new ArrayList<Heading>());
+    		result.setLinks(new ArrayList<Link>());
     		result.setTitle("");
     		result.setVersion("");
     	}

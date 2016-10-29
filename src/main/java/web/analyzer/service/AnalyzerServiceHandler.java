@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.analyzer.domain.AnalysisResult;
 import web.analyzer.domain.Heading;
+import web.analyzer.domain.Link;
 import web.analyzer.utils.Utils;
 
 @Service
 public class AnalyzerServiceHandler implements AnalyzerService {
+	
+	private static final String USER_AGENT="Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2";
 
 	private Connection connection;
 
@@ -31,7 +34,7 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 			connection = Jsoup.connect(url.trim());
 			try {
 				
-				Document htmlDocument = connection.timeout(10*1000).get();
+				Document htmlDocument = connection.timeout(10*1000).userAgent(USER_AGENT).get();
 				int statusCode = connection.response().statusCode();
 				String statusMessage = connection.response().statusMessage();
 				//analysisResult.setRequestStatusCode(statusCode);
@@ -58,8 +61,8 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 
 					// Process links
 					String hostName = connection.request().url().getHost();
-					utils.getLinks(htmlDocument, hostName);
-					
+					List<Link> links = utils.getLinks(htmlDocument, hostName);
+					analysisResult.setLinks(links);
 
 				}
 			

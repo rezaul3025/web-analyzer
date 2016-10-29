@@ -7,6 +7,8 @@
 		table {
 		    border-collapse: collapse;
 		    border-spacing: 0;
+		   
+   			width: 100%;
 		}
 		table>thead>tr>th {
 			border-bottom: 2px solid #ddd;
@@ -23,10 +25,20 @@
 			line-height: 1.42857;
 			padding: 8px;
 			vertical-align: top;
+			 word-wrap: break-word;
+		}
+		div{
+			max-width: none !important;
+   			width: 970px;
+   			margin-left: auto;
+    		margin-right: auto;
+    		padding-left: 10px;
+    		padding-right: 10px;
 		}
 	</style>
 </head>
 <body>
+<div>
 	<h2>Web Analyzer</h2>
 	<hr/>
 	<p th:text="'Request URL : ' + ${forminput.url}" />
@@ -41,26 +53,45 @@
 		<b>Title : </b> <span th:text="${analysisresult.title}"></span>
 	</p>
 	<p>
-		<b>Heading(s) &amp; Level: </b>
-		total heading(s) : <span
+		<b>Total heading(s) : </b><span
 				th:text="${analysisresult.headings.size()}"></span>
+	</p>
+	<p>
+		<b>Total link(s) : </b><span
+				th:text="${analysisresult.links.size()}"></span>
+	</p>
+	<p>All headings &amp; links are displayed below</p>
+	<p>
+		<b>Heading(s) &amp; Level: </b>
 	</p>
 	<table>
 		<tr>
 			<th>Tag</th>
-			<th>Tag Content</th>
+			<th style="text-align:left">Tag Content</th>
 			<th>Level</th>
-		</tr>
-		<tr>
-			<td colspan="3">Total heading(s) : <span
-				th:text="${analysisresult.headings.size()}"></span>
-			</td>
 		</tr>
 		<tr th:each="heading : ${analysisresult.headings}">
 			<td th:text="${heading.tagName}"></td>
-			<td th:utext="${heading.tagContent}"></td>
+			<td style="width:85%" th:utext="${heading.tagContent}"></td>
 			<td th:text="${heading.level}"></td>
 		</tr>
 	</table>
+	
+	<p>
+		<b>Link(s) : </b>	
+	</p>
+	<table>
+		<tr>
+			<th style="text-align:left">Link</th>
+			<th>Type</th>
+			<th>Is Accessible ?</th>
+		</tr>
+		<tr th:each="link : ${analysisresult.links}">
+			<td style="width:85%" th:text="${link.href}"></td>
+			<td th:utext="${link.type}"></td>
+			<td th:text="${link.accessible}"></td>
+		</tr>
+	</table>
+	</div>
 </body>
 </html>

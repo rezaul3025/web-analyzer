@@ -19,6 +19,7 @@ public class AnalysisResult {
     private String version;
     private String title;
     private List<Heading> headings = new ArrayList<Heading>();
+    private List<Link> links = new ArrayList<Link>();
     private Integer requestStatusCode;
     private String requestStatusMessage;
 
@@ -44,6 +45,14 @@ public class AnalysisResult {
 
 	public void setHeadings(List<Heading> headings) {
 		this.headings = headings;
+	}
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
 	}
 
 	public Integer getRequestStatusCode() {

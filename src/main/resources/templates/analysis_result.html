@@ -58,7 +58,9 @@
 	</p>
 	<p>
 		<b>Total link(s) : </b><span
-				th:text="${analysisresult.links.size()}"></span>
+				th:text="${analysisresult.linkResult.links.size()}"></span>,
+				Total internal link(s):<span th:text="${analysisresult.linkResult.totalInternalLink}"></span>, 
+				Total external link(s):<span th:text="${analysisresult.linkResult.totalExternalLink}"></span>
 	</p>
 	<p>
 		<b>Has LoginForm :</b>
@@ -90,7 +92,7 @@
 			<th style="text-align:left">Type</th>
 			<th style="text-align:left">Is Accessible ?</th>
 		</tr>
-		<tr th:each="link : ${analysisresult.links}">
+		<tr th:each="link : ${analysisresult.linkResult.links}">
 			<td style="width:81%" th:text="${link.href}"></td>
 			<td th:utext="${link.type}"></td>
 			<td th:text="${link.accessible}"></td>

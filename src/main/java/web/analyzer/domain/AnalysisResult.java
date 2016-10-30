@@ -19,7 +19,7 @@ public class AnalysisResult {
     private String version;
     private String title;
     private List<Heading> headings = new ArrayList<Heading>();
-    private List<Link> links = new ArrayList<Link>();
+    private LinkResult linkResult = new LinkResult();
     private String hasLoginForm;
     private Integer requestStatusCode;
     private String requestStatusMessage;
@@ -48,12 +48,12 @@ public class AnalysisResult {
 		this.headings = headings;
 	}
 
-	public List<Link> getLinks() {
-		return links;
+	public LinkResult getLinkResult() {
+		return linkResult;
 	}
 
-	public void setLinks(List<Link> links) {
-		this.links = links;
+	public void setLinkResult(LinkResult linkResult) {
+		this.linkResult = linkResult;
 	}
 
 	public String getHasLoginForm() {

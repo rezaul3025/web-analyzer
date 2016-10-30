@@ -43,6 +43,6 @@ public class AnalyzerServiceTest {
 		assertTrue(analyzerService.getAanlysisResult().getTitle().contains("Bootstrap"));
 		assertEquals("YES", analyzerService.getAanlysisResult().getHasLoginForm());
 		assertEquals(Integer.valueOf(199), Integer.valueOf(analyzerService.getAanlysisResult().getHeadings().size()));
-		assertEquals(Integer.valueOf(156), Integer.valueOf(analyzerService.getAanlysisResult().getLinks().size()));
+		assertEquals(Integer.valueOf(156), Integer.valueOf(analyzerService.getAanlysisResult().getLinkResult().getLinks().size()));
 	}
 }

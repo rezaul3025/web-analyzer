@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import web.analyzer.domain.AnalysisResult;
 import web.analyzer.domain.Heading;
 import web.analyzer.domain.Link;
+import web.analyzer.domain.LinkResult;
 
 /**
  *
@@ -48,7 +49,7 @@ public class Utils {
 	private static final String XHTML = "xhtml";
 
 	private static final String HEADING_TAG = "h1,h2,h3,h4,h5,h6";
-	
+
 	private static final String URL_VALIDATIN_REGEX = "^http(s{0,1})://[a-zA-Z0-9_/\\-\\.]+\\.([A-Za-z/]{2,5})[a-zA-Z0-9_/\\&\\?\\=\\-\\.\\~\\%]*";
 
 	public String getDocVersion(List<Node> nodes) {
@@ -113,26 +114,35 @@ public class Utils {
 		return headingList;
 	}
 
-	public List<Link> getLinks(Document doc, String hostName) throws IOException {
+	public LinkResult getLinks(Document doc, String hostName) throws IOException {
 		List<Link> linksInfo = new ArrayList<Link>();
+		int totalInternalLink = 0;
+		int totalExternalLink = 0;
 		Elements links = doc.select("a[href]");
 		for (Element link : links) {
 			String href = link.attr("abs:href");
-			if (href.startsWith("http://") || href.startsWith("https://")) {
+			if (isValidUrl(href)) {
 				URL url = new URL(href);
 				String linkHostName = url.getHost();
-				String linkType = linkHostName.equalsIgnoreCase(hostName) ? "internal" : "external";
-				linksInfo.add(new Link(href, linkType, false));
+				String linkType = "";
+				if (linkHostName.equalsIgnoreCase(hostName)) {
+					linkType = "internal";
+					totalInternalLink++;
+				} else {
+					linkType = "external";
+					totalExternalLink++;
+				}
+				linksInfo.add(new Link(href, linkType, true));
 			}
 		}
 
-		return linksInfo;
+		return new LinkResult(linksInfo, totalInternalLink, totalExternalLink, 0, 0);
 	}
 
 	public boolean hasLoginForm(Document doc) {
 		Elements formElements = doc.getElementsByTag("form");
 		for (Element formElement : formElements) {
-			
+
 			String frmElementAsString = formElement.toString().toLowerCase().replace("'", "\"");
 			Pattern inputTextTagPattern = Pattern.compile("type=\"text\"");
 			Matcher inputTextTagMatcher = inputTextTagPattern.matcher(frmElementAsString);
@@ -140,26 +150,26 @@ public class Utils {
 			while (inputTextTagMatcher.find()) {
 				inputTextTagCount++;
 			}
-			
+
 			Pattern inputEmailTagPattern = Pattern.compile("type=\"email\"");
 			Matcher inputEmailTagMatcher = inputEmailTagPattern.matcher(frmElementAsString);
 			int inputEmailTagCount = 0;
 			while (inputEmailTagMatcher.find()) {
 				inputEmailTagCount++;
 			}
-			
+
 			Pattern inputPasswordTagPattern = Pattern.compile("type=\"password\"");
 			Matcher inputPasswordTagMatcher = inputPasswordTagPattern.matcher(frmElementAsString);
 			int inputPasswordTagCount = 0;
 			while (inputPasswordTagMatcher.find()) {
 				inputPasswordTagCount++;
 			}
-			
-			if((inputTextTagCount == 1 || inputEmailTagCount == 1) && inputPasswordTagCount ==1){
+
+			if ((inputTextTagCount == 1 || inputEmailTagCount == 1) && inputPasswordTagCount == 1) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -170,7 +180,7 @@ public class Utils {
 
 		if (isError) {
 			result.setHeadings(new ArrayList<Heading>());
-			result.setLinks(new ArrayList<Link>());
+			result.setLinkResult(new LinkResult());
 			result.setTitle("");
 			result.setVersion("");
 			result.setHasLoginForm("");
@@ -216,8 +226,8 @@ public class Utils {
 			return false;
 		}
 	}
-	
-	public boolean isValidUrl(String url){
+
+	public boolean isValidUrl(String url) {
 		Pattern urlPattern = Pattern.compile(URL_VALIDATIN_REGEX);
 		Matcher urlMatcher = urlPattern.matcher(url);
 		boolean foundMatch = urlMatcher.matches();

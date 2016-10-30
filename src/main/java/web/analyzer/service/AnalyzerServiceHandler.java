@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import web.analyzer.domain.AnalysisResult;
 import web.analyzer.domain.Heading;
 import web.analyzer.domain.Link;
+import web.analyzer.domain.LinkResult;
 import web.analyzer.utils.Utils;
 
 @Service
@@ -56,8 +57,8 @@ public class AnalyzerServiceHandler implements AnalyzerService {
 
 					// Process links
 					String hostName = connection.request().url().getHost();
-					List<Link> links = utils.getLinks(htmlDocument, hostName);
-					analysisResult.setLinks(links);
+					LinkResult linkResult = utils.getLinks(htmlDocument, hostName);
+					analysisResult.setLinkResult(linkResult);
 
 					// process form
 					analysisResult.setHasLoginForm(utils.hasLoginForm(htmlDocument) ? "YES" : "NO");

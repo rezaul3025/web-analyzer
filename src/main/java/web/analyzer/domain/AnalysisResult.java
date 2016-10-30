@@ -11,7 +11,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * Domain POJO, represent analysis result
+ * 
  * @author rkarim
  */
 @Component

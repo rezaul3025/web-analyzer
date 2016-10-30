@@ -16,6 +16,12 @@ import web.analyzer.domain.FormInput;
 import web.analyzer.service.AnalyzerService;
 import web.analyzer.utils.Utils;
 
+/**
+ * Spring mvc controller class
+ * 
+ * @author rkarim
+ *
+ */
 @Controller
 public class WebAnalyzerController {
 
@@ -43,7 +49,6 @@ public class WebAnalyzerController {
 	
 		analyzerService.analyze(url);
 		AnalysisResult analysisResult = analyzerService.getAanlysisResult();
-		//System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + analysisResult.getRequestStatusCode());
 		model.addAttribute("analysisresult", analysisResult);
 		return "analysis_result";
 	}

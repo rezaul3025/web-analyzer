@@ -6,10 +6,7 @@
 package web.analyzer.utils;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +25,7 @@ import web.analyzer.domain.Link;
 import web.analyzer.domain.LinkResult;
 
 /**
+ * Utils service class, to implement extra business logic
  *
  * @author rkarim
  */
@@ -45,7 +43,6 @@ public class Utils {
 
 	private static final String XHTML1_VERSION = "1.0";
 	private static final String XHTML11_VERSION = "1.1";
-	// private static final String XHTM2_VERSION = "2.0";
 	private static final String XHTML = "xhtml";
 
 	private static final String HEADING_TAG = "h1,h2,h3,h4,h5,h6";
@@ -57,7 +54,6 @@ public class Utils {
 		for (Node node : nodes) {
 			if (node instanceof DocumentType) {
 				DocumentType documentType = (DocumentType) node;
-				System.out.println(documentType.toString());
 				String docTypePublicId = documentType.toString();// documentType.attr("publicid");
 				if (docTypePublicId != null && !docTypePublicId.isEmpty()) {
 					docTypePublicId = docTypePublicId.toLowerCase();
@@ -132,11 +128,12 @@ public class Utils {
 					linkType = "external";
 					totalExternalLink++;
 				}
-				linksInfo.add(new Link(href, linkType, true));
+				
+				linksInfo.add(new Link(href, linkType));
 			}
 		}
 
-		return new LinkResult(linksInfo, totalInternalLink, totalExternalLink, 0, 0);
+		return new LinkResult(linksInfo, totalInternalLink, totalExternalLink);
 	}
 
 	public boolean hasLoginForm(Document doc) {
@@ -187,51 +184,11 @@ public class Utils {
 		}
 
 	}
-
-	private boolean pingHost(String href) {
-		/*
-		 * try { boolean reachable =
-		 * InetAddress.getByName(host).isReachable(3000); } catch
-		 * (UnknownHostException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); } catch (IOException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); }
-		 */
-		/*
-		 * try (Socket socket = new Socket()) { socket.connect(new
-		 * InetSocketAddress(host, port), timeout); return true; } catch
-		 * (IOException e) { return false; // Either timeout or unreachable or
-		 * failed DNS lookup. }
-		 */
-
-		/*
-		 * try { InetAddress.getByName(href).isReachable(2000); //Replace with
-		 * your name return true; } catch (Exception e) { return false; }
-		 */
-
-		try {
-			URL url = new URL(href);
-			URLConnection urlConnection = url.openConnection();
-
-			HttpURLConnection.setFollowRedirects(false);
-			HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
-			httpURLConnection.setRequestMethod("HEAD");
-			httpURLConnection.setRequestProperty("User-Agent",
-					"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-
-			return (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK);
-
-		} catch (UnknownHostException unknownHostException) {
-			return false;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
+	
 	public boolean isValidUrl(String url) {
 		Pattern urlPattern = Pattern.compile(URL_VALIDATIN_REGEX);
 		Matcher urlMatcher = urlPattern.matcher(url);
 		boolean foundMatch = urlMatcher.matches();
 		return foundMatch;
 	}
-
 }

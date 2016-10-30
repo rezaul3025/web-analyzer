@@ -36,6 +36,39 @@
     		padding-right: 10px;
 		}
 	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+	    
+	    $(document).ready(function(){
+	    	//Check using REST call, if link is accessible or not 
+	    	var links = [[${analysisresult.linkResult.links}]];
+		   	var  inaccessibleLinks =0 ;
+		    $('#inaccessibleLinks').html('Canculating ...')
+		    for(i in links){
+		    	urlExists(links[i].href, i);
+		    }
+		    
+		    function urlExists(url, index){
+		    	  $.ajax({
+		    	    type: 'GET',
+		    	    url: '/check-link-accessibility?link='+url,
+		    	    success: function(data){
+		    	      console.log(data);
+		    	      $('#link'+index).html(data+"");
+		    	      if(!data){
+		    	    	  $('#inaccessibleLinks').html(inaccessibleLinks++);
+		    	      }
+		    	    },
+		    	    error: function() {
+		    	      
+		    	    }
+		    	  });
+		    	}  
+	    });
+	
+		/*]]>*/
+	</script>
 </head>
 <body>
 <div>
@@ -59,14 +92,16 @@
 	<p>
 		<b>Total link(s) : </b><span
 				th:text="${analysisresult.linkResult.links.size()}"></span>,
-				Total internal link(s):<span th:text="${analysisresult.linkResult.totalInternalLink}"></span>, 
-				Total external link(s):<span th:text="${analysisresult.linkResult.totalExternalLink}"></span>
+				Total internal link(s): <span th:text="${analysisresult.linkResult.totalInternalLink}"></span>, 
+				Total external link(s): <span th:text="${analysisresult.linkResult.totalExternalLink}"></span>,
+				Total inaccessible link(s): <span id="inaccessibleLinks"></span>
 	</p>
 	<p>
 		<b>Has LoginForm :</b>
 		<span th:text="${analysisresult.hasLoginForm}"></span>
 	</p>
-	<p>All headings &amp; links are displayed below</p>
+	<p><b>All headings &amp; links are displayed below:</b></p>
+	<hr/>
 	<p>
 		<b>Heading(s) &amp; Level: </b> (level start from 0)
 	</p>
@@ -92,10 +127,10 @@
 			<th style="text-align:left">Type</th>
 			<th style="text-align:left">Is Accessible ?</th>
 		</tr>
-		<tr th:each="link : ${analysisresult.linkResult.links}">
+		<tr th:each="link,iterStat : ${analysisresult.linkResult.links}">
 			<td style="width:81%" th:text="${link.href}"></td>
 			<td th:utext="${link.type}"></td>
-			<td th:text="${link.accessible}"></td>
+			<td th:id="'link'+${iterStat.index}"></td>
 		</tr>
 	</table>
 	</div>

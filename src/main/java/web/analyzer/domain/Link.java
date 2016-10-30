@@ -1,21 +1,25 @@
 package web.analyzer.domain;
 
+/**
+ * Domain POJO class, represent link of requested page
+ * 
+ * @author rkarim
+ *
+ */
+
 public class Link {
 	
 	private String href;
 	
 	private String type;
 	
-	private boolean accessible;
-	
 	public Link(){
 		
 	}
 	
-	public Link(String href, String type, boolean accessible){
+	public Link(String href, String type){
 		this.href = href;
 		this.type = type;
-		this.accessible = accessible;
 	}
 
 	public String getHref() {
@@ -32,13 +36,5 @@ public class Link {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public boolean getAccessible() {
-		return accessible;
-	}
-
-	public void setAccessible(boolean accessible) {
-		this.accessible = accessible;
 	}
 }

@@ -12,6 +12,11 @@
     		padding-left: 10px;
     		padding-right: 10px;
 		}
+		input{
+			height: 34px;
+    		line-height: 1.42857;
+    		font-size: 14px;
+		}
 	</style>
 </head>
 <body>
@@ -21,7 +26,7 @@
 		<form action="#" th:action="@{/init-analyzer}" th:object="${forminput}" method="post">
 			<p>
 				Please, type website url to be analyzed 
-				<input type="text" th:field="*{url}" size="40" width="30" placeholder="e.g. http//:webexample.com" />
+				<input type="text" th:field="*{url}" size="60"  placeholder="e.g. http//:webexample.com" />
 			</p>
 			<p>
 				<span style="color: red;" th:text="${errormessage}"></span>

@@ -1,5 +1,12 @@
 package web.analyzer.domain;
 
+/**
+ * Domain POJO class, represent heading of the requested page
+ * 
+ * @author rkarim
+ *
+ */
+
 public class Heading {
 	
 	private String tagName;

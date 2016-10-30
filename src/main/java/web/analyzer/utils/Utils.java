@@ -7,11 +7,6 @@ package web.analyzer.utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -23,7 +18,6 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.FormElement;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
@@ -54,6 +48,8 @@ public class Utils {
 	private static final String XHTML = "xhtml";
 
 	private static final String HEADING_TAG = "h1,h2,h3,h4,h5,h6";
+	
+	private static final String URL_VALIDATIN_REGEX = "^http(s{0,1})://[a-zA-Z0-9_/\\-\\.]+\\.([A-Za-z/]{2,5})[a-zA-Z0-9_/\\&\\?\\=\\-\\.\\~\\%]*";
 
 	public String getDocVersion(List<Node> nodes) {
 		String version = "non";
@@ -97,14 +93,11 @@ public class Utils {
 	}
 
 	public List<Heading> docHeadingsProcess(Document doc) {
-
 		List<Heading> headingList = new ArrayList<Heading>();
 		int level = 0;
 		Elements eles = doc.select("*");
 		for (Element ele : eles) {
 			level++;
-			// System.out.println(ele.text());
-			// System.out.println(level);
 			if (HEADING_TAG.contains(ele.tagName())) {
 				headingList.add(new Heading(ele.tagName(), ele.html(), level));
 			}
@@ -124,26 +117,12 @@ public class Utils {
 		List<Link> linksInfo = new ArrayList<Link>();
 		Elements links = doc.select("a[href]");
 		for (Element link : links) {
-			// print(" * %s <%s> (%s)", link.tagName(),link.attr("abs:href"),
-			// link.attr("rel"));
 			String href = link.attr("abs:href");
-			// String rel = link.attr("rel");
-
-			/*
-			 * URL u = new URL ( "http://www.example.com/"); HttpURLConnection
-			 * huc = ( HttpURLConnection ) u.openConnection ();
-			 * huc.setRequestMethod ("GET"); //OR huc.setRequestMethod ("HEAD");
-			 * huc.connect () ; int code = huc.getResponseCode() ;
-			 * System.out.println(code);
-			 */
-
 			if (href.startsWith("http://") || href.startsWith("https://")) {
-				// System.out.println(pingHost(href));
 				URL url = new URL(href);
 				String linkHostName = url.getHost();
 				String linkType = linkHostName.equalsIgnoreCase(hostName) ? "internal" : "external";
-				//System.out.println(linkType);
-				linksInfo.add(new Link(href, linkType, true));
+				linksInfo.add(new Link(href, linkType, false));
 			}
 		}
 
@@ -152,7 +131,6 @@ public class Utils {
 
 	public boolean hasLoginForm(Document doc) {
 		Elements formElements = doc.getElementsByTag("form");
-		//FormElement form = ((FormElement) doc.select("form"));
 		for (Element formElement : formElements) {
 			
 			String frmElementAsString = formElement.toString().toLowerCase().replace("'", "\"");
@@ -180,7 +158,6 @@ public class Utils {
 			if((inputTextTagCount == 1 || inputEmailTagCount == 1) && inputPasswordTagCount ==1){
 				return true;
 			}
-	
 		}
 		
 		return false;
@@ -238,6 +215,13 @@ public class Utils {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	public boolean isValidUrl(String url){
+		Pattern urlPattern = Pattern.compile(URL_VALIDATIN_REGEX);
+		Matcher urlMatcher = urlPattern.matcher(url);
+		boolean foundMatch = urlMatcher.matches();
+		return foundMatch;
 	}
 
 }

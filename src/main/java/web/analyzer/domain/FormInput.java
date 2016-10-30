@@ -1,7 +1,11 @@
 package web.analyzer.domain;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class FormInput {
 	
+	@NotNull
 	private String url;
 
 	public String getUrl() {

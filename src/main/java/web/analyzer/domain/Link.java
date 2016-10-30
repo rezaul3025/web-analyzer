@@ -12,7 +12,7 @@ public class Link {
 		
 	}
 	
-	public Link(String href, String type, boolean isAccessible){
+	public Link(String href, String type, boolean accessible){
 		this.href = href;
 		this.type = type;
 		this.accessible = accessible;

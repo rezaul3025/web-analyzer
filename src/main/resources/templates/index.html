@@ -24,6 +24,9 @@
 				<input type="text" th:field="*{url}" size="40" width="30" placeholder="e.g. http//:webexample.com" />
 			</p>
 			<p>
+				<span style="color: red;" th:text="${errormessage}"></span>
+			</p>
+			<p>
 				<input type="submit" name="analyzewebsite" value="Analyze" />
 			</p>
 		</form>

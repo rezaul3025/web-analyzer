@@ -37,12 +37,14 @@ public class AnalyzerServiceTest {
 	
 	@Test
 	public void testAnalyzerService(){
-		analyzerService.analyze("http://getbootstrap.com/css");
+		analyzerService.analyze("https://github.com/rezaul3025");
 		assertEquals(Integer.valueOf(200),analyzerService.getAanlysisResult().getRequestStatusCode());
 		assertEquals("HTML 5", analyzerService.getAanlysisResult().getVersion());
-		assertTrue(analyzerService.getAanlysisResult().getTitle().contains("Bootstrap"));
-		assertEquals("YES", analyzerService.getAanlysisResult().getHasLoginForm());
-		assertEquals(Integer.valueOf(199), Integer.valueOf(analyzerService.getAanlysisResult().getHeadings().size()));
-		assertEquals(Integer.valueOf(156), Integer.valueOf(analyzerService.getAanlysisResult().getLinkResult().getLinks().size()));
+		assertTrue(analyzerService.getAanlysisResult().getTitle().contains("GitHub"));
+		assertEquals("NO", analyzerService.getAanlysisResult().getHasLoginForm());
+		assertEquals(Integer.valueOf(9), Integer.valueOf(analyzerService.getAanlysisResult().getHeadings().size()));
+		assertEquals(Integer.valueOf(53), Integer.valueOf(analyzerService.getAanlysisResult().getLinkResult().getLinks().size()));
+		assertEquals(Integer.valueOf(40), Integer.valueOf(analyzerService.getAanlysisResult().getLinkResult().getTotalInternalLink()));
+		assertEquals(Integer.valueOf(13), Integer.valueOf(analyzerService.getAanlysisResult().getLinkResult().getTotalExternalLink()));
 	}
 }
